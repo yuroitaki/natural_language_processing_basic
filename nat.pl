@@ -39,7 +39,7 @@ verb_phrase(VP) :-
 
 /*The base case is to verify if the single sentence follows the grammar*/
 
-/*The recursive case splits the conjunction of sentences to single sentence*/
+/*The recursive case splits the conjunction of sentences into single sentence*/
 /*i.e. 'S1','S2' before checking its grammar*/
 
 conj(Text):-
@@ -86,7 +86,7 @@ char_encode(H,EH):-
 	third_charac(Alp,Third),
 	atom_chars(EH,[Initial,Second,Third]).
 
-/* checks if the word 'H' is an animate word */
+/* checks if the word 'H' is an animate */
 
 first_charac(H,Initial):-
 	animate(X),
@@ -111,7 +111,7 @@ third_charac([H|_T],Third):-
 
 /* Actor Predicate */
 
-/* first check if the conjunction of sentences make sense grammatically */
+/* first check if the conjunction of sentences makes sense grammatically */
 /* actor_check/2 stores all the actors into the list 'A_List'*/
 /* valid_actor/2 checks if all the actors are the same */
 
