@@ -28,32 +28,45 @@ verb_phrase(VP) :-
 
 */
 
-/* conj predicate */
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+/* Tau Teng Chong */
+/* Prolog Assessed Exercise */
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+/* Conjunction Predicate */
+
+/*The base case is to verify if the single sentence follows the grammar*/
+
+/*The recursive case splits the conjunction of sentences to single sentence*/
+/*i.e. 'S1','S2' before checking its grammar*/
 
 conj(Text):-
-	\+ member(and,Text)->
-	sentence(Text);
-	conj_check(Text).
-
-conj_check(Text):-
-	\+ append(_S1,[and|_S2],Text)->
 	sentence(Text).
-	   
-conj_check(Text):-
+
+conj(Text):-
 	append(S1,[and|S2],Text),
 	sentence(S1),
-	conj_check(S2).
+	conj(S2).
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-/* encode predicate*/
+/* Encode Predicate */
+
+/* checks if the first word of the list is a noun recursively until the list is empty */
 
 encode([],[]).
+
+/* The first word 'H' is a not a noun, hence not encrypted */
 
 encode(Text,EncodedText):-
 	Text = [H|T],
 	\+ noun([H]),
 	EncodedText = [H|L],
 	encode(T,L).
+
+/* The first word 'H' is a noun, hence encrypted to 'EH' via char_encode/2 */
 
 encode(Text,EncodedText):-
 	Text = [H|T],
@@ -62,36 +75,53 @@ encode(Text,EncodedText):-
 	EncodedText = [EH|L],
 	encode(T,L).
 
+/* consists of three encryption predicates and atom_chars/2 */
+/* atom_chars/2 splits the word 'H' to separated alphabets 'Alp' */
+/* then combines the encrypted alphabets to 'EH'*/
+
 char_encode(H,EH):-
-	animate_check(H,Initial),
-	atom_chars(H,L_Word),
-	length_check(L_Word,Second),
-	third_charac(L_Word,Third),
+	first_charac(H,Initial),
+	atom_chars(H,Alp),
+	second_charac(Alp,Second),
+	third_charac(Alp,Third),
 	atom_chars(EH,[Initial,Second,Third]).
 
-animate_check(H,Initial):-
+/* checks if the word 'H' is an animate word */
+
+first_charac(H,Initial):-
 	animate(X),
 	member(H,X)->
 	Initial = a;
 	Initial = d.
 
-length_check(L_Word,Second):-
-	length(L_Word,Len),
+/* determine the length of the list of separated alphabets 'Alp' */
+
+second_charac(Alp,Second):-
+	length(Alp,Len),
 	Len > 3 ->
 	Second = l;
 	Second = s.
 
+/* determine the first letter 'H' of the word */
+
 third_charac([H|_T],Third):-
 	Third = H.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+/* Actor Predicate */
 
-/* same actor predicate */
+/* first check if the conjunction of sentences make sense grammatically */
+/* actor_check/2 stores all the actors into the list 'A_List'*/
+/* valid_actor/2 checks if all the actors are the same */
 
 same_actor(Text):-
 	conj(Text)->
 	actor_check(Text,A_List),
 	valid_actor(A_List).
+
+/* determine if the first word 'A' is an actor */
+/* by checking if the second word 'V' is a verb */
 
 actor_check([_X],[]).
 	
@@ -100,6 +130,8 @@ actor_check([A,V|T],A_List):-
 	A_List = [A|L],
 	actor_check([V|T],L);
 	actor_check([V|T],A_List).
+
+/* checks if all the actors 'H' are the same */
 
 valid_actor([_H]).
 
